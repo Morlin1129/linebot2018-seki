@@ -4,7 +4,7 @@ var app = express();
 
 app.set('view engine', 'ejs');
 
-// サーバーの設定
+// サーバーの設定test
 var server = app.listen(process.env.PORT || 5000);
 
 app.get("/", function(req, res, next){ //追加
