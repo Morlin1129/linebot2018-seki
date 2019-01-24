@@ -48,6 +48,45 @@ function handleEvent(event) {
 //まずはここを触っていきます。
 function getMessageText(text) {
   var message;
+  var recipes = [{
+    title : "卵焼き",
+    syokuzai : [
+       {
+        material : "卵",
+        amount : "1個"
+       },
+       {
+        material : "塩",
+        amount : "大さじ1"
+       },
+       {
+        material : "砂糖",
+        amount : "大さじ1"
+       },
+    ],
+    tukurikata : "材料を混ぜ、フライパンに油を引く。全体にいきとどいたら丸めていく",
+    yosan : "１００円"
+  },
+  {
+    title : "料理の名前",
+  syokuzai : [
+     {
+      material : "食材A",
+      amount : "大さじ1"
+     },
+     {
+      material : "食材B",
+      amount : "大さじ1"
+     },
+     {
+      material : "食材C",
+      amount : "大さじ1"
+     },
+  ],
+  tukurikata : "いためる",
+  yosan : "5000兆円"
+}
+];
   if(text.match(/こんにちは|こんにちわ|今日は|Hello|ごきげんよう/) ){
     message = 'こんにちは！';
     var now = new Date();
@@ -56,7 +95,39 @@ function getMessageText(text) {
     message += '今は' + hour + '時です';
   } else if(text.match(/こんばんは|こんばんわ/) ){
   　message = 'こんばんは！'
+} else if(text.match(/レシピ/) ){
+  　message = 'とりあえずまずは1つ目のレシピをだしてみます\n';
+  var searchMaterial =  text.split("レシピ")[0].trim();
+  console.log('searchMaterial:' + searchMaterial);
+  var filteredRecipes = recipes.filter(function(v) {
+    for(var i = 0; i < v.syokuzai.length; i++) {
+      console.log('s.material'+v.syokuzai[0].material)
+      if(searchMaterial.indexOf(v.syokuzai[0].material) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  });
+  var recipe;
+  if(filteredRecipes.length) {
+    recipe = filteredRecipes[0];
+    message += "こちらのレシピが見つかりました！";
   } else {
+    message = "お探しの食材のレシピは見つかりませんでした";
+    return message;
+  }
+  message += "---" + "\n";
+  message += recipe.title + "\n";
+  message += recipe.yosan + "\n";
+  message += "◇材料◇" + "\n";
+
+  for (var i = 0 ; i < recipe.syokuzai.length; i++) {
+    message += "・" + recipe.syokuzai[i].material +
+    "--" + recipe.syokuzai[i].amount + "\n";
+  }
+  message += recipe.tukurikata + "\n";
+
+  } else  {
     message = 'まだあいさつくらいしか返せません・・・'
   }
   return message;
